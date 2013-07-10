@@ -1,0 +1,26 @@
+{
+  "lang": {
+    "ruby": {
+        "version": "ruby-1.9.3" ,
+        "gems": [],
+        "gemset":"",
+        "user":"",
+	"rails": {
+		"sites": [ 
+				{"domain" : "test.com", 
+				 "document_root":"/home/ubuntu/test.com",
+				 "rails_env": "development"},
+				{"domain" : "test2.com",
+				"document_root" : "/home/ubuntu/test2.com"}
+			]
+	}
+    }
+  },
+  "appserver": {
+      "nginx":{
+          "modules": ["http_ssl_module","http_gzip_static_module"]
+      }
+  },
+  "run_list": [ "recipe[apt]",
+		"recipe[appserver_nginx]"]
+}

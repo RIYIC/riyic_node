@@ -1,7 +1,7 @@
-module Check
-    class Process
+module Riyic
+    class Check::Process < Riyic::Check
         # para incluir o setters automaticos
-        include AttributeMixin
+        extend Riyic::AttributeMixin
     
         attr_setter :running
     
@@ -16,6 +16,15 @@ module Check
     
         def run 
             puts "Testeando o proceso #{@process_name} dentro do nodo #{@node.name}"
+            begin
+                @node.ssh("ps -auxwwwwf|fgrep '#{@process_name}'")
+            rescue
+                ko if @running
+            end
+
+            ok
+
+            @status
         end
     end
 end

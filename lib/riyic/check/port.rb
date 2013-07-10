@@ -1,7 +1,7 @@
-module Check
-    class Port
+module Riyic
+    class Check::Port < Riyic::Check
         # para incluir o setters automaticos
-        include AttributeMixin
+        extend Riyic::AttributeMixin
     
         attr_setter :open, :protocol,:interface
     
@@ -17,6 +17,19 @@ module Check
     
         def run 
             puts "Testeando o porto #{@port} do nodo #{@node.name}"
+
+            # miramos se temos que buscar tcp ou udp
+            flag = (@protocol == 'tcp')? 't' : 'u'
+
+            begin
+                @node.ssh("netstat -pan -#{flag} | fgrep '#{@interface}:#{@port}' ")
+            rescue
+                ko if @open
+            end
+
+            ok
+
+            @status
         end
     end
 end
