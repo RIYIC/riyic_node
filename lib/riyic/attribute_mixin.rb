@@ -19,8 +19,7 @@ module Riyic
                 end
             end
         end
-        
-        
+
         ## hai que usar o hook "included" para poder insertar metodos de clase
         ## xa que os metodos de clase se insertar "extendendo"
         ## e por defecto os mixin se "incluen" => solo os ve unha instancia

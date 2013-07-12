@@ -3,8 +3,11 @@ $:.unshift File.dirname(__FILE__)+'/../lib'
 
 require "riyic"
 
+# habilitamos o debug
+Riyic.enable_debug
+
 # creamos un vps para test
-node = Riyic::Node.new("test") do
+node = Riyic.build_node("test") do
     ssh_key         "/home/alambike/.ssh/id_rsa"
     driver          'lxc'
     driver_options  :base => 'ubuntu12.04.2',
@@ -19,12 +22,11 @@ end
 # executamos a converxencia mediante o noso script ryc
 node.converge do
     #opcions para pasarlle a ryc
-    json_file 'nginx.json'
-    download_cookbooks false
-    #api_key "opcional"
-    #server_id "opcional"
-    environment "dev" # test | prod | dev, por defecto test
-    install     false #true
+    #json_file 'nginx.json'
+    api_key "pDVJvAyWrXyNfft6kpAE"
+    server_id 24
+    environment "prod" # test | prod | dev, por defecto test
+    install     true # install ryc client
 end
 
 #cargamos os valores do nodo 

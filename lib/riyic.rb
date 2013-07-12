@@ -15,5 +15,17 @@ require "riyic/check/process"
 require "riyic/colorized_strings"
 
 module Riyic
-    DEBUG = false
+    $debug = false
+
+    class << self
+        def build_node(name, &block)
+            Riyic::Node.new(name, &block)
+        end
+
+        def enable_debug
+            $debug = true
+        end
+
+    end
+
 end

@@ -54,9 +54,9 @@ module Riyic
                 cmd = cmd.join(" ")
             end
 
-            puts "Enviando #{cmd} a #{@vps.ip} con el user #{@vps.ssh_user}" if DEBUG
+            puts "Enviando #{cmd} a #{@vps.ip} con el user #{@vps.ssh_user}" if $debug
             res = ssh_exec!(@ssh_conn, cmd)
-            puts "Resultado:#{res}" if DEBUG
+            puts "Resultado:#{res}" if $debug
             res
 
         end
@@ -66,7 +66,9 @@ module Riyic
             
             # seteamos os atributos a partir do json do nodo
             @node_attrs = Oj.load(r.node_json)
- 
+            
+            puts "ATRIBUTOS A SETEAR NO NODO #{@node_attrs}" if $debug
+
             # executamos a converxencia
             # si peta saimos cos detalles do erro
             begin

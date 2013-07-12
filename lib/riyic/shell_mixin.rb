@@ -4,11 +4,11 @@ require 'mixlib/shellout'
 module Riyic
     module ShellMixin
         def run_cmd(cmd)
-            puts "RUN_CMD: #{cmd}" if DEBUG
+            puts "RUN_CMD: #{cmd}" if $debug
             com = Mixlib::ShellOut.new(cmd)
             com.run_command
             com.error!
-            puts "salida: #{com.stdout}" if DEBUG
+            puts "salida: #{com.stdout}" if $debug
             com.stdout
         end
 
@@ -31,13 +31,13 @@ module Riyic
                     abort "could not execute command" unless success
             
                     channel.on_data do |ch, data|
-                        puts "STDOUT: #{data}" if DEBUG
+                        puts "STDOUT: #{data}" if $debug
                         stdout_data += data
                         #channel.send_data "something for stdin\n"
                     end
             
                     channel.on_extended_data do |ch, type, data|
-                        puts "STDERR: #{data}" if DEBUG
+                        puts "STDERR: #{data}" if $debug
                         stderr_data += data
                     end
 

@@ -19,4 +19,14 @@ class String
   def pink
     colorize(35)
   end
+
+  # metodo para generar unha cadea aleatoria
+  # metemolo dentro dos metodos de clase de String
+  # pa chamalo usamos String.random(i)
+  class << self
+    def random(i=8)
+      o =  [('a'..'z'),('0'...'9')].map{|i| i.to_a}.flatten
+      (0...i).map{ o[rand(o.length)] }.join
+    end
+  end              
 end

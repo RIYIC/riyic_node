@@ -46,8 +46,8 @@ module Riyic
 
             if @json_file 
                 f = File.read(@json_file)
-                @node.ssh("echo -n '#{f}' > /tmp/test.json")
-                @json_file = '/tmp/test.json'
+                @json_file_remote = "/tmp/test_#{String.random}.json"
+                @node.ssh("echo -n '#{f}' > #{@json_file_remote}")
             end
             
             cmd = build_cmd
@@ -60,7 +60,7 @@ module Riyic
                 cmd.push("-E", @environment) if @environment
                 cmd.push("-A", @api_key) if @api_key
                 cmd.push("-S", @server_id) if @server_id
-                cmd.push("-j", @json_file) if @json_file
+                cmd.push("-j", @json_file_remote) if @json_file
                 return cmd
             end
     end
