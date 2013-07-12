@@ -18,13 +18,15 @@ module Riyic
         end
 
         def get_server_config
-            uri = URI("#{@base_url}/admin/servers/#{@server_id}/generate_config?auth_token=#{@auth_token}")
+            uri = URI("#{@base_url}/admin/servers/#{@server_id}/generate_config?auth_token=#{@api_key}")
+            puts "api call: #{uri}" if $debug
             http = Net::HTTP.new(uri.host, uri.port)
             #http.use_ssl = true
                 
             req = Net::HTTP::Get.new(uri.request_uri)
             resp = http.request(req)
 
+            puts resp.inspect if $debug
             resp.body
                 
         end
