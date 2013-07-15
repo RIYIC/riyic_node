@@ -21,17 +21,19 @@ module Riyic
 	    	return false unless ssh_conn and !ssh_conn.closed?
 	    end
 
-        def ssh_exec(conn, cmd)
+        def ssh_exec(conn, cmd, pty = $debug)
             stdout_data = ""
             stderr_data = ""
             exit_code = nil
             @ssh_conn.open_channel do |channel|
+                # solicitamos pty si estamos en modo debug, ou se nos pasa a opcion
+                channel.request_pty if pty
 
                 channel.exec(cmd) do |ch, success|
                     abort "could not execute command" unless success
             
                     channel.on_data do |ch, data|
-                        puts "STDOUT: #{data}" if $debug
+                        puts data if $debug
                         stdout_data += data
                         #channel.send_data "something for stdin\n"
                     end
@@ -61,7 +63,7 @@ module Riyic
                 raise stderr
             end
 
-            stdout
+            stdout+stderr
         end
     end
 end
