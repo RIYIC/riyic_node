@@ -16,7 +16,7 @@ module Riyic
         end
     
         def run 
-            puts "Testeando comando #{@command} no nodo #{@node.name}"
+            puts "Testeando comando '#{@command}' no nodo '#{@node.name}'"
 
             stdout = nil
 
@@ -29,7 +29,14 @@ module Riyic
 
             # chequeamos si a salida coincide co esperado (si hai esperado)
             if @result
-                ok if stdout == @result 
+                puts "Testeando que a salida coincida con #{@result}"
+                if @result.is_a?(Regexp)
+                    #puts "result e unha regexp #{@result} que ten que machear contra #{stdout}".red if $debug
+                    ok if stdout =~ @result
+                else
+                    ok if stdout == @result
+                end
+
                 ko
             end
 
