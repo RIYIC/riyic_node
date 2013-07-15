@@ -19,6 +19,7 @@ module Riyic
                     status = test.run
 
                     puts "RESULTADO check_#{name}: ".yellow+((status == "OK")? "OK".green : "KO".red)
+                    puts 
                 end
             end
         end

@@ -19,14 +19,23 @@ end
 # vamos a executar unha serie de tests a ver se o nodo converge ok
 # ca run_list proporcionada
 
-# executamos a converxencia mediante o noso script ryc
+# executamos a converxencia mediante o noso script ryc_cli
+#node.converge do
+#    #opcions para pasarlle a ryc
+#    #json_file 'nginx.json'
+#    api_key "pDVJvAyWrXyNfft6kpAE"
+#    server_id 24
+#    environment "prod" # test | prod | dev, por defecto test
+#    install     true # install ryc client
+#end
+
 node.converge do
     #opcions para pasarlle a ryc
     #json_file 'nginx.json'
-    api_key "pDVJvAyWrXyNfft6kpAE"
-    server_id 24
-    environment "prod" # test | prod | dev, por defecto test
-    install     true # install ryc client
+    api_key "mSW7MbH1xVz7kGdp5rFv"
+    server_id 13
+    environment "dev" # test | prod | dev, por defecto test
+    install     false #true # install ryc client
 end
 
 #cargamos os valores do nodo 
@@ -34,19 +43,13 @@ json = node.node_attrs
 
 # agora vamos a executar os checks
 # de momento os comandos se executan dentro do nodo, accedendo por ssh
-# testeamos a existencia dun ficheiro
-#vps.check_file json["node"]["nginx"]["source"]["conf"] do
-node.check_file "/etc/nginx/nginx.conf" do
-    exists true #true|false  por defecto suponhemos que testeamos existencia
-    mode 0755
-    owner "root"
-    type "file" #"Dir|File|Link"
-end
+
+ruby_version = json["lang"]["ruby"]["version"].sub(/\-/, ' ')
 
 # testear a saida dun comando
-node.check_command "perl -v" do
-    run_ok true  #true|false  por defecto ok (status_code = 0)
+node.check_command "/usr/local/rvm/bin/rvm default do ruby -v" do
     #result /json["node"]["rvm"]["ruby_version"]/
+    result /#{ruby_version}/
 end
 
 # testeamos o estado dun porto
@@ -61,3 +64,27 @@ end
 node.check_process "nginx" do
     running true
 end
+
+# testeamos a existencia dun ficheiro
+#vps.check_file json["node"]["nginx"]["source"]["conf"] do
+node.check_file "/etc/nginx/nginx.conf" do
+    exists true #true|false  por defecto suponhemos que testeamos existencia
+    mode 0755
+    owner "root"
+    type "file" #"Dir|File|Link"
+end
+
+# chequeamos que a version de nginx instalada sexa a solicitada
+node.check_command "#{json['appserver']['nginx']['install_dir']}/sbin/nginx -v" do
+	run_ok true
+	result /#{json['appserver']['nginx']['version']}/m
+end
+
+# testeamos qu a version de passenger sexa a solicitada
+node.check_command "/usr/local/rvm/bin/rvm default do passenger -v" do
+	run_ok true
+	result /#{json['appserver']['nginx']['passenger']['version']}/m
+end
+
+
+
