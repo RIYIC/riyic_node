@@ -4,6 +4,9 @@ module Riyic
         extend AttributeMixin
         include ShellMixin
 
+        #variables de clase, aqui gardamos un nodo anterior, para encadenar tests
+        @@node = nil
+
         # class method para crear uns metodos check_xxx
         # de forma dinamica, para usar o dsl vps.check_xxx
         def self.define_check_tests(*checks)
@@ -12,9 +15,15 @@ module Riyic
                     # construimos o obxeto check dinamicamente
                     # p.ex: Riyic::Check::File
                     # e executamos o seu metodo run 
+
+                    # capitalizamos o nome do check
+                    # en caso de que o nome do check sexa composto hai que trozealo
+                    # p.ex: external_command  -> ExternalCommand
+                    class_name = name.to_s.split('_').map {|p| p.capitalize}.join('')
+                    
                     test = Object.const_get("Riyic").
                                   const_get("Check").
-                                  const_get(name.capitalize).
+                                  const_get(class_name).
                                         new(self,objetivo,&block)
                     status = test.run
 
@@ -23,16 +32,29 @@ module Riyic
                 end
             end
         end
+
+        # metodo para gardar o nodo na clase, 
+        # para asi poder encadenar tests sin ter que volver a crear o nodo
+        def self.set_node(node)
+            @@node = node
+        end
+
+        def self.get_node
+            @@node
+        end
         
         attr_setter :driver, :driver_options, :ssh_key, :build_vps
-        define_check_tests :file, :command, :port, :process 
+        define_check_tests :file, :command, :port, :process, :external_command , :external_port
         attr_reader :name, :node_attrs
+        attr_accessor :already_converged
 
         def initialize(name,&block)
+
             # defaults
             @name                   = name
             @node_attrs             = {}
             @vps                    = nil
+            @already_converged      = nil
 
             # atributos a setear en el bloque
             @ssh_key                = "my_ssh_key"
@@ -44,6 +66,11 @@ module Riyic
             
             instance_eval(&block)
             create_vps
+        end
+
+        # getter da ip do vps
+        def ip
+            @vps.ip 
         end
 
         def ssh(cmd)
@@ -63,6 +90,8 @@ module Riyic
         end
 
         def converge(&block)
+            return if @already_converged
+
             r = Riyic::Exec.new(self,&block)
             
             # seteamos os atributos a partir do json do nodo
@@ -80,6 +109,7 @@ module Riyic
                 exit(1)
             end
             puts "TEST CONVERGENCIA OK".green
+            @already_converged = true
 
         end
         
