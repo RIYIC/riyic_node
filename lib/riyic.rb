@@ -1,6 +1,7 @@
 require "oj"
 require "net/ssh"
 require "mixlib/shellout"
+require "do_api"
 
 require "riyic/colorized_strings"
 require "riyic/attribute_mixin"
@@ -8,6 +9,7 @@ require "riyic/shell_mixin"
 
 require "riyic/api"
 require "riyic/driver/lxc"
+require "riyic/driver/digitalocean"
 require "riyic/node"
 require "riyic/exec"
 

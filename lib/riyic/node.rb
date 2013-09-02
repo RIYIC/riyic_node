@@ -125,8 +125,15 @@ module Riyic
                           const_get(@driver.capitalize).
                                         new(@name,@driver_options)
 
-            @vps.create if @build_vps
-	        puts "CREADO OK"
+            if @build_vps
+                @vps.create
+                puts "CREADO OK"
+            else
+                # si non temos que crear o vps, se supon que xa esta creado
+                # asiq solicitamos o driver que cargue os seus parametros
+                @vps.load
+                puts "VPS CARGADO OK"
+            end
 
             puts "TESTEANDO CONEXION A INTERNET DESDE O NODO"
             i = 0

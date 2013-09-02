@@ -43,5 +43,8 @@ module Riyic::Driver
         def delete
         end
 
+        def load
+        end
+
     end
 end

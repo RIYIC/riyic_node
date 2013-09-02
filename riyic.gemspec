@@ -7,9 +7,15 @@ Gem::Specification.new do |s|
   s.authors     = ["Javier Gomez"]
   s.email       = 'alambike@gmail.com'
   s.require_paths = ["lib"]
+  s.files         = `git ls-files`.split($/)
+
   s.add_runtime_dependency "oj","~> 2.0"
   s.add_runtime_dependency "net-ssh","~> 2.6"
   s.add_runtime_dependency "mixlib-shellout","~> 1.1"
+  
+  # necesitamos a nosa gema de digital_ocean
+  #s.add_runtime_dependency "do_api","~> 0.1"
+
   s.homepage    =
     'https://github.com/RIYIC/riyic_node'
 end
