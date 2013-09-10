@@ -26,6 +26,8 @@ module Riyic
 
     class << self
         def build_node(name, &block)
+            puts "DEBUG ENABLED" if $debug
+            
             # para encadenar test, si xa esta seteado o nodo na clase devolvemolo
             if node = Riyic::Node.get_node
                 return node
